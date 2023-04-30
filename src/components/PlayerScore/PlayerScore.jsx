@@ -18,20 +18,31 @@ Ce composant permet d'afficher le score de chaque joureur de manière individuel
 */
 
 import { useSelector } from "react-redux";
-// Ce selector me renvoie le joueur qui a l'avantage
-import { selectPlayerHasAdvantage, selectPlayerScore } from "../../selectors/selectors";
+import {
+  selectPlayerHasAdvantage,
+  selectPlayerScore,
+  selectPointBeforeWin,
+} from "../../selectors/selectors";
 
 // 1
 export function PlayerScore({ playerId, playerName }) {
   // 1.a accède au score du joueur
   const score = useSelector(selectPlayerScore(playerId));
-  // 1.b
-  // 1.b.V3 version finale : accède à 'l'avantage ou non' du joueur
+  // 1.b accède à 'l'avantage ou non' du joueur
   const hasAdvantage = useSelector(selectPlayerHasAdvantage(playerId));
+  // 1.c accède aux nombres de points restant aux joueurs pour gagner le jeu.
+  const pointsBeforeWin = useSelector(selectPointBeforeWin(playerId));
 
   return (
     <div className="player-score">
-      <p>{playerName}</p>
+      <p>
+        {playerName}
+        {pointsBeforeWin === null
+          ? ""
+          : ` (encore ${pointsBeforeWin} ${
+              pointsBeforeWin > 1 ? "points" : "point"
+            })`}
+      </p>
       <p>{(hasAdvantage ? "Avantage - " : "") + score}</p>
     </div>
   );
