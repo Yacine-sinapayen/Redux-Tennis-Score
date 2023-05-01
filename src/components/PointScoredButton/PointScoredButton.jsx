@@ -1,4 +1,4 @@
-// J'import dispatch depui react-redux
+// J'import dispatch depuis react-redux
 import { useDispatch } from "react-redux";
 import { pointScored } from "../../store";
 
