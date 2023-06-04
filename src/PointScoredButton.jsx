@@ -1,8 +1,8 @@
 // J'import dispatch depuis react-redux
 import { useDispatch } from "react-redux";
-import { pointScored } from "../../store";
+import { pointScored } from "./store";
 
-export function PointScoredButton({ playerId, children}) {
+export function PointScoredButton({ playerId, children }) {
   const dispatch = useDispatch();
 
   return (
@@ -16,5 +16,3 @@ export function PointScoredButton({ playerId, children}) {
     </button>
   );
 }
-
-export default PointScoredButton;

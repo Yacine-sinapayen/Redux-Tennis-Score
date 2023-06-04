@@ -1,9 +1,7 @@
 import { useSelector } from "react-redux";
-// ce selector me permet de récupérer le nombre de jeux gagnés par joueur.
-import { selectPlayerPoints } from "../../selectors/selectors";
+import { selectPlayerPoints } from "./selectors";
 
-export function PlayersPoints({ playerId, playerName }) {
-  // ce selector me permet de récupérer le nombre de jeux gagnés par joueur.
+export function PlayerPoints({ playerId, playerName }) {
   const playerPoints = useSelector(selectPlayerPoints(playerId));
 
   return (

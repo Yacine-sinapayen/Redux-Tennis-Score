@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { restartGame } from "../../store";
+import { restartGame } from "./store";
 
 export function ResetButton() {
   const dispatch = useDispatch();
