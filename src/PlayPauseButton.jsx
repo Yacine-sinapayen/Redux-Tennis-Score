@@ -1,4 +1,3 @@
-// on import useDispatch depuis react-redux
 import { useStore } from "react-redux";
 import { autoplay } from "./store";
 
