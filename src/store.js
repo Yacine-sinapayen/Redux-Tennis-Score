@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import {produce} from "immer";
+import { produce } from "immer";
 
 // state
 const initialState = {
@@ -7,7 +7,7 @@ const initialState = {
   player2: 0,
   advantage: null,
   winner: null,
-  playing: true,
+  playing: false,
   // historique des jeux joués
   history: [
     // { player1: 15, player2: 40, winner: "player2" }
@@ -16,7 +16,10 @@ const initialState = {
 
 // actions creators
 
-export const playPause = () => ({ type: "playPause" });
+export const setPlaying = (playing) => ({
+  type: "setPlaying",
+  payload: playing,
+});
 
 export const restartGame = () => ({ type: "restart" });
 
@@ -24,6 +27,42 @@ export const pointScored = (player) => ({
   type: "pointScored",
   payload: { player: player },
 });
+
+export const autoplay = (store) => {
+  // je récupère le state de mon jeu
+  const isPlaying = store.getState().playing;
+
+  if (isPlaying || store.getState().winner) {
+    // Déjà entarin de jouer, on ne fait rien
+    return;
+  }
+
+  // on indique que la partie est en cours
+  store.dispatch(setPlaying(true));
+
+  playNextPoint();
+  function playNextPoint() {
+    if (store.getState().playing === false) {
+      return;
+    }
+
+    const time = 1000 + Math.floor(Math.random() * 2000);
+
+    window.setTimeout(() => {
+      if (store.getState().playing === false) {
+        return;
+      }
+      // si oui on marque un point aléatoire. Math.random() > 0.5 <=> 1 chance sur 2 d'être choisis
+      const pointWinner = Math.random() > 0.5 ? "player1" : "player2";
+      store.dispatch(pointScored(pointWinner));
+      if (store.getState().winner) {
+        store.dispatch(setPlaying(false));
+        return;
+      }
+      playNextPoint();
+    }, time);
+  }
+};
 
 function reducer(state = initialState, action) {
   if (action.type === "restart") {
@@ -44,14 +83,16 @@ function reducer(state = initialState, action) {
       draft.playing = true;
     });
   }
-  if (action.type === "playPause") {
+
+  if (action.type === "setPlaying") {
     if (state.winner) {
       return state;
     }
     return produce(state, (draft) => {
-      draft.playing = !draft.playing;
+      draft.playing = action.payload;
     });
   }
+
   if (action.type === "pointScored") {
     const player = action.payload.player;
     const otherPlayer = player === "player1" ? "player2" : "player1";
